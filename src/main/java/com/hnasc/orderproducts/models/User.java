@@ -1,17 +1,19 @@
-package com.hnasc.orderproducts.user.model;
+package com.hnasc.orderproducts.models;
 
-import com.hnasc.orderproducts.user.enums.UserRoleEnum;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.UUID;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_user")
-public class User implements UserDetails {
+public class User implements Serializable, UserDetails {
+    @Serial
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -21,38 +23,48 @@ public class User implements UserDetails {
     private String name;
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false, columnDefinition = "integer default 0")
-    private UserRoleEnum role;
+    @ManyToOne
+    private UserRole role;
     @Column(nullable = false)
     private Boolean enabled;
+
+
+    public User() {
+    }
+    public User(String username, String name, String password, UserRole role) {
+        this.username = username;
+        this.name = name;
+        this.password = password;
+        this.role = role;
+        this.enabled = true;
+    }
 
     public UUID getId() {
         return id;
     }
 
-    @Override
     public String getUsername() {
         return username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return false;
     }
 
     public String getName() {
@@ -65,10 +77,9 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(new SimpleGrantedAuthority(role.getDescription()));
     }
 
-    @Override
     public String getPassword() {
         return password;
     }
@@ -77,24 +88,21 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public UserRoleEnum getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(UserRoleEnum role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(username, user.username);
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(username);
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
+
+
 }
