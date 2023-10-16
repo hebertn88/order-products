@@ -27,7 +27,7 @@ public class UserRole implements Serializable {
     }
 
     public UserRole(String description) {
-        this.description = description;
+        this.description = description.toUpperCase();
     }
 
     public Long getId() {
@@ -39,7 +39,7 @@ public class UserRole implements Serializable {
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description = description.toUpperCase();
     }
 
     @JsonIgnore

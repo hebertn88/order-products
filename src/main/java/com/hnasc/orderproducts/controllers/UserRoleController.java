@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/user-roles")
+@RequestMapping(value = "user-roles")
 public class UserRoleController {
     @Autowired
     UserRoleService roleService;
