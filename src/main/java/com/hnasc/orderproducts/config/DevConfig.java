@@ -1,10 +1,8 @@
 package com.hnasc.orderproducts.config;
 
 import com.hnasc.orderproducts.models.User;
-import com.hnasc.orderproducts.models.UserRole;
-import com.hnasc.orderproducts.repositories.UserRepository;
-import com.hnasc.orderproducts.repositories.UserRoleRepository;
-import com.hnasc.orderproducts.services.UserRoleService;
+import com.hnasc.orderproducts.models.enums.UserRole;
+import com.hnasc.orderproducts.models.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -16,10 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class DevConfig implements CommandLineRunner {
 
     @Autowired
-    private UserRoleService roleService;
-    @Autowired
-    private UserRoleRepository roleRepository;
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -27,20 +21,21 @@ public class DevConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-           var r1 = roleService.create(new UserRole("user"));
-           r1.ifPresent(role -> {
-               var user = new User("user", "hebert", passwordEncoder.encode("password"), role);
-               var u = userRepository.save(user);
-               System.out.println(u);
-           });
+        var foundUser = userRepository.findByUsername("user");
+        var foundAdmin = userRepository.findByUsername("admin");
 
-           var r2 = roleService.create(new UserRole("admin"));
-           r2.ifPresent(role -> {
-               var user = new User("admin", "hebertAdmin", passwordEncoder.encode("password"), role);
-               var u = userRepository.save(user);
-               System.out.println(u);
-           });
-
+        if (foundUser == null) {
+            var u1 = new User("user", "userDev", passwordEncoder.encode("password"), UserRole.USER);
+            u1.setEnabled(true);
+            userRepository.save(u1);
+            System.out.println(u1);
+        }
+        if (foundAdmin == null) {
+            var u2 = new User("admin", "adminDev", passwordEncoder.encode("password"), UserRole.ADMIN);
+            u2.setEnabled(true);
+            userRepository.save(u2);
+            System.out.println(u2);
+        }
     }
 
 

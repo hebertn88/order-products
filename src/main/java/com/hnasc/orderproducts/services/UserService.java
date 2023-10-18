@@ -1,26 +1,22 @@
 package com.hnasc.orderproducts.services;
 
+import com.hnasc.orderproducts.dtos.user.UserEnableDTO;
+import com.hnasc.orderproducts.dtos.user.UserResponseDTO;
+import com.hnasc.orderproducts.dtos.user.UserUpdateDTO;
 import com.hnasc.orderproducts.models.User;
-import com.hnasc.orderproducts.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class UserService implements UserDetailsService {
-    @Autowired
-    UserRepository repository;
+public interface UserService extends UserDetailsService {
+    public List<User> findAll();
+    public UserDetails loadUserByUsername(String username);
+    public User insert(User user);
 
-    public List<User> findAll() {
-        return (List<User>) repository.findAll();
-    }
+    public void setEnable(Long id, UserEnableDTO status);
+    public User udpate(Long id, UserUpdateDTO obj);
+    public UserResponseDTO toUserResponseDTO(User user);
+    public List<UserResponseDTO> toUserResponseDTO(List<User> users);
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findByUsername(username);
-    }
 }

@@ -1,12 +1,17 @@
 package com.hnasc.orderproducts.controllers;
 
-import com.hnasc.orderproducts.dtos.AuthLoginDTO;
+import com.hnasc.orderproducts.dtos.auth.AuthLoginDTO;
+import com.hnasc.orderproducts.dtos.auth.AuthRegisterDTO;
+import com.hnasc.orderproducts.dtos.user.UserResponseDTO;
 import com.hnasc.orderproducts.models.User;
 import com.hnasc.orderproducts.security.TokenService;
+import com.hnasc.orderproducts.services.UserService;
+import jakarta.persistence.Transient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,14 +24,26 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @PostMapping(value = "login")
     public ResponseEntity<String> login(@RequestBody AuthLoginDTO data) {
         var userCredentialsToken = new UsernamePasswordAuthenticationToken(data.username(), data.password());
         var auth = this.authenticationManager.authenticate(userCredentialsToken);
-        var token = tokenService.generateToken((User) auth.getPrincipal());
-        System.out.println(token);
-        System.out.println(tokenService.validateToken(token));
 
-        return ResponseEntity.ok(token);
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+        return ResponseEntity.ok(tokenService.TOKEN_PREFIX + token);
+    }
+
+    @Transient
+    @PostMapping(value = "register")
+    public ResponseEntity<UserResponseDTO> register(@RequestBody AuthRegisterDTO data) {
+        User u = data.toUser();
+        u.setPassword(passwordEncoder.encode(u.getPassword()));
+        UserResponseDTO resp = new UserResponseDTO(userService.insert(u));
+        return ResponseEntity.ok(resp);
     }
 }

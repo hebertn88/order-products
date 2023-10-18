@@ -1,6 +1,10 @@
 package com.hnasc.orderproducts.models;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hnasc.orderproducts.models.enums.UserRole;
 import jakarta.persistence.*;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,31 +19,36 @@ public class User implements Serializable, UserDetails {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(unique = true, nullable = false)
     private String username;
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
     private String password;
-    @ManyToOne
-    private UserRole role;
+    @Column(nullable = false)
+    private String role;
     @Column(nullable = false)
     private Boolean enabled;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "client")
+    private Set<Order> orders = new HashSet<>();
 
 
     public User() {
     }
+
     public User(String username, String name, String password, UserRole role) {
         this.username = username;
         this.name = name;
         this.password = password;
-        this.role = role;
-        this.enabled = true;
+        this.role = role.getRole();
+        enabled = false;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
@@ -77,7 +86,7 @@ public class User implements Serializable, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.getDescription()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
     }
 
     public String getPassword() {
@@ -89,11 +98,11 @@ public class User implements Serializable, UserDetails {
     }
 
     public UserRole getRole() {
-        return role;
+        return UserRole.valueOf(role);
     }
 
     public void setRole(UserRole role) {
-        this.role = role;
+        this.role = role.getRole();
     }
 
     public Boolean getEnabled() {
