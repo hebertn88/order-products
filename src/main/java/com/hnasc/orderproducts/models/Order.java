@@ -31,6 +31,10 @@ public class Order implements Serializable {
     @OneToMany(mappedBy = "id.order")
     private Set<OrderItem> items = new HashSet<>();
 
+    public Double getTotal(){
+        return items.stream().mapToDouble(OrderItem::getSubTotal).sum();
+    }
+
     public Long getId() {
         return id;
     }

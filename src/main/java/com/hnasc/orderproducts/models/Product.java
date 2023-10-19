@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tb_product")
@@ -21,6 +24,9 @@ public class Product implements Serializable {
     private String description;
     @Column(nullable = false)
     private Double price;
+
+    @OneToMany(mappedBy = "id.product")
+    private Set<OrderItem> items = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -48,6 +54,11 @@ public class Product implements Serializable {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+
+    public Set<Order> getOrders() {
+        return items.stream().map(OrderItem::getOrder).collect(Collectors.toSet());
     }
 
     @Override

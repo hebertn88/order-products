@@ -1,5 +1,6 @@
 package com.hnasc.orderproducts.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hnasc.orderproducts.models.pk.OrderItemPK;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -30,6 +31,7 @@ public class OrderItem implements Serializable {
         this.price = price;
     }
 
+    @JsonIgnore
     public Order getOrder() {
         return id.getOrder();
     }
@@ -59,6 +61,10 @@ public class OrderItem implements Serializable {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Double getSubTotal() {
+        return quantity * price;
     }
 
     @Override

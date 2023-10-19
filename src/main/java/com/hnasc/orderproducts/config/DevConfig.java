@@ -36,6 +36,8 @@ public class DevConfig implements CommandLineRunner {
             userRepository.save(u2);
             System.out.println(u2);
         }
+
+
     }
 
 
