@@ -25,6 +25,15 @@ public class Product implements Serializable {
     @Column(nullable = false)
     private Double price;
 
+    public Product() {
+    }
+
+    public Product(String name, String description, Double price) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+    }
+
     @OneToMany(mappedBy = "id.product")
     private Set<OrderItem> items = new HashSet<>();
 

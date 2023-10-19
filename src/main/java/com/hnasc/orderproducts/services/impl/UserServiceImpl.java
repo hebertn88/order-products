@@ -72,7 +72,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     private void updateData(User userDB, UserUpdateDTO obj) {
         UserRole role = UserRole.fromString(obj.role());
 
