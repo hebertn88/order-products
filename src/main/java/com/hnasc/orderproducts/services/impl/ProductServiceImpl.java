@@ -1,5 +1,6 @@
 package com.hnasc.orderproducts.services.impl;
 
+import com.hnasc.orderproducts.dtos.product.ProductInsertDTO;
 import com.hnasc.orderproducts.dtos.product.ProductPriceDTO;
 import com.hnasc.orderproducts.dtos.product.ProductUpdateDTO;
 import com.hnasc.orderproducts.models.Product;
@@ -28,6 +29,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Product insert(ProductInsertDTO obj) throws DataIntegrityViolationException {
+        var product = new Product(obj.name(), obj.description(), obj.price());
+        return repository.save(product);
+    }
+
+    @Override
     public Product udpate(Long id, ProductUpdateDTO obj) {
         var product = getProductById(id);
         updateData(product, obj);
@@ -49,6 +56,5 @@ public class ProductServiceImpl implements ProductService {
     private void updateData(Product productDB, ProductUpdateDTO obj) {
         productDB.setName(obj.name());
         productDB.setDescription(obj.description());
-        productDB.setPrice(obj.price());
     }
 }

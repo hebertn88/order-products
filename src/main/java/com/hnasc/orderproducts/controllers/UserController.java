@@ -20,6 +20,7 @@ public class UserController {
     UserService userService;
     @Autowired
     PasswordEncoder passwordEncoder;
+
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> findAll() {
         var users = userService.findAll();
@@ -32,6 +33,7 @@ public class UserController {
         User user = userService.udpate(id, obj);
         return ResponseEntity.ok(new UserResponseDTO(user));
     }
+
     @PutMapping("/{id}/status")
     public ResponseEntity<UserResponseDTO> enable(@PathVariable Long id, @RequestBody UserEnableDTO obj) {
         userService.setEnable(id, obj);

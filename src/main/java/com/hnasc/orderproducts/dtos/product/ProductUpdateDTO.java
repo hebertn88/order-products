@@ -1,4 +1,4 @@
 package com.hnasc.orderproducts.dtos.product;
 
-public record ProductUpdateDTO(String name, String description, Double price) {
+public record ProductUpdateDTO(String name, String description) {
 }
