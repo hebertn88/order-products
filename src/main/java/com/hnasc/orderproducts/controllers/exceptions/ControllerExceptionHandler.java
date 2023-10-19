@@ -1,5 +1,6 @@
 package com.hnasc.orderproducts.controllers.exceptions;
 
+import com.hnasc.orderproducts.services.exceptions.InvalidRoleException;
 import com.hnasc.orderproducts.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,10 +20,17 @@ public class ControllerExceptionHandler {
         var body = new StandardError(Instant.now(), status.value(), error, err.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(body);
     }
-
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<StandardError> DataIntegrityViolation(DataIntegrityViolationException err, HttpServletRequest request) {
         String error = "Data Integrity Violation.";
+        var status = HttpStatus.BAD_REQUEST;
+        var body = new StandardError(Instant.now(), status.value(), error, err.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler(InvalidRoleException.class)
+    public ResponseEntity<StandardError> InvalidRole(InvalidRoleException err, HttpServletRequest request) {
+        String error = "Invalid Role.";
         var status = HttpStatus.BAD_REQUEST;
         var body = new StandardError(Instant.now(), status.value(), error, err.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(body);

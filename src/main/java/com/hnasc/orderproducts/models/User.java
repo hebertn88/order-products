@@ -98,7 +98,7 @@ public class User implements Serializable, UserDetails {
     }
 
     public UserRole getRole() {
-        return UserRole.valueOf(role);
+        return UserRole.fromString(role);
     }
 
     public void setRole(UserRole role) {

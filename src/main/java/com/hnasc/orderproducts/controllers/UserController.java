@@ -2,6 +2,7 @@ package com.hnasc.orderproducts.controllers;
 
 import com.hnasc.orderproducts.dtos.user.UserEnableDTO;
 import com.hnasc.orderproducts.dtos.user.UserResponseDTO;
+import com.hnasc.orderproducts.dtos.user.UserRoleDTO;
 import com.hnasc.orderproducts.dtos.user.UserUpdateDTO;
 import com.hnasc.orderproducts.models.User;
 import com.hnasc.orderproducts.services.UserService;
@@ -34,6 +35,12 @@ public class UserController {
     @PutMapping("/{id}/status")
     public ResponseEntity<UserResponseDTO> enable(@PathVariable Long id, @RequestBody UserEnableDTO obj) {
         userService.setEnable(id, obj);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}/credentials")
+    public ResponseEntity<UserResponseDTO> setRoles(@PathVariable Long id, @RequestBody UserRoleDTO obj) {
+        userService.setRole(id, obj);
         return ResponseEntity.ok().build();
     }
 

@@ -2,6 +2,7 @@ package com.hnasc.orderproducts.services.impl;
 
 import com.hnasc.orderproducts.dtos.user.UserEnableDTO;
 import com.hnasc.orderproducts.dtos.user.UserResponseDTO;
+import com.hnasc.orderproducts.dtos.user.UserRoleDTO;
 import com.hnasc.orderproducts.dtos.user.UserUpdateDTO;
 import com.hnasc.orderproducts.models.User;
 import com.hnasc.orderproducts.models.enums.UserRole;
@@ -34,6 +35,14 @@ public class UserServiceImpl implements UserService {
         return repository.save(user);
     }
 
+    @Override
+    public User udpate(Long id, UserUpdateDTO obj) {
+        var optUser = repository.findById(id);
+        var user = optUser.orElseThrow(() -> new ResourceNotFoundException(id));
+        updateData(user, obj);
+        return repository.save(user);
+    }
+
     public void setEnable(Long id, UserEnableDTO obj) {
         var user = repository.findById(id);
 
@@ -48,16 +57,24 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    @Override
-    public User udpate(Long id, UserUpdateDTO obj) {
-        var optUser = repository.findById(id);
-        var user = optUser.orElseThrow(() -> new ResourceNotFoundException(id));
-        updateData(user, obj);
-        return repository.save(user);
+    public void setRole(Long id, UserRoleDTO obj) {
+        var user = repository.findById(id);
+
+        user.ifPresentOrElse(
+                u -> {
+                    u.setRole(UserRole.fromString(obj.role()));
+                    repository.save(u);
+                },
+                () -> {
+                    throw new ResourceNotFoundException(id);
+                }
+        );
     }
 
+
+
     private void updateData(User userDB, UserUpdateDTO obj) {
-        UserRole role = UserRole.valueOf(obj.role().toUpperCase());
+        UserRole role = UserRole.fromString(obj.role());
 
         userDB.setName(obj.name());
         userDB.setPassword(obj.password());
