@@ -1,5 +1,6 @@
 package com.hnasc.orderproducts.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -66,6 +67,7 @@ public class Product implements Serializable {
     }
 
 
+    @JsonIgnore
     public Set<Order> getOrders() {
         return items.stream().map(OrderItem::getOrder).collect(Collectors.toSet());
     }

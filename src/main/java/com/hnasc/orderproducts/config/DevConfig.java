@@ -1,8 +1,12 @@
 package com.hnasc.orderproducts.config;
 
+import com.hnasc.orderproducts.models.Order;
+import com.hnasc.orderproducts.models.OrderItem;
 import com.hnasc.orderproducts.models.Product;
 import com.hnasc.orderproducts.models.User;
 import com.hnasc.orderproducts.models.enums.UserRole;
+import com.hnasc.orderproducts.models.repositories.OrderItemRepository;
+import com.hnasc.orderproducts.models.repositories.OrderRepository;
 import com.hnasc.orderproducts.models.repositories.ProductRepository;
 import com.hnasc.orderproducts.models.repositories.UserRepository;
 import com.hnasc.orderproducts.services.ProductService;
@@ -22,6 +26,10 @@ public class DevConfig implements CommandLineRunner {
     private UserRepository userRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private OrderRepository orderRepository;
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -38,13 +46,12 @@ public class DevConfig implements CommandLineRunner {
             var u1 = new User("user", "userDev", passwordEncoder.encode("password"), UserRole.USER);
             u1.setEnabled(true);
             userRepository.save(u1);
-            System.out.println(u1);
-        }
-        if (foundAdmin == null) {
+            System.out.println("User: " + u1.getUsername() + " , Password: " + u1.getPassword());
+
             var u2 = new User("admin", "adminDev", passwordEncoder.encode("password"), UserRole.ADMIN);
             u2.setEnabled(true);
             userRepository.save(u2);
-            System.out.println(u2);
+            System.out.println("User: " + u2.getUsername() + " , Password: " + u2.getPassword());
         }
 
         // products
@@ -57,6 +64,21 @@ public class DevConfig implements CommandLineRunner {
             productRepository.saveAll(Arrays.asList(p1, p2, p3));
         }
 
+        // Order
+
+        var o = new Order((User) foundUser);
+        o = orderRepository.save(o);
+
+        p1 = productRepository.findByName(p1.getName()).get();
+        p2 = productRepository.findByName(p2.getName()).get();
+        p3 = productRepository.findByName(p3.getName()).get();
+
+        var i1 = new OrderItem(o, p1, 2, p1.getPrice());
+        var i2 = new OrderItem(o, p2, 1, p2.getPrice());
+        var i3 = new OrderItem(o, p3, 3, 0.99);
+
+
+        orderItemRepository.saveAll(Arrays.asList(i1, i2, i3));
 
     }
 

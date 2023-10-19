@@ -28,11 +28,20 @@ public class Order implements Serializable {
     @JoinColumn(name = "client_id")
     private User client;
 
-    @OneToMany(mappedBy = "id.order")
+    @OneToMany(mappedBy = "id.order", cascade = CascadeType.ALL)
     private Set<OrderItem> items = new HashSet<>();
 
-    public Double getTotal(){
+    public Double getTotal() {
         return items.stream().mapToDouble(OrderItem::getSubTotal).sum();
+    }
+
+    public Order() {
+    }
+
+    public Order(User client) {
+        moment = Instant.now();
+        orderStatus = OrderStatus.WAITING_PAYMENT.getStatus();
+        this.client = client;
     }
 
     public Long getId() {
@@ -53,5 +62,17 @@ public class Order implements Serializable {
 
     public void setOrderStatus(OrderStatus status) {
         orderStatus = status.getStatus();
+    }
+
+    public User getClient() {
+        return client;
+    }
+
+    public Set<OrderItem> getItems() {
+        return items;
+    }
+
+    public void addItem(OrderItem item) {
+        items.add(item);
     }
 }

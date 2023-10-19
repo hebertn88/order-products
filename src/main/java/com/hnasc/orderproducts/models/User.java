@@ -112,16 +112,4 @@ public class User implements Serializable, UserDetails {
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", role=" + role +
-                ", enabled=" + enabled +
-                '}';
-    }
 }

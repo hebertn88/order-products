@@ -1,5 +1,6 @@
 package com.hnasc.orderproducts.models.pk;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hnasc.orderproducts.models.Order;
 import com.hnasc.orderproducts.models.Product;
 import jakarta.persistence.Embeddable;
@@ -15,10 +16,12 @@ public class OrderItemPK implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
@@ -30,6 +33,7 @@ public class OrderItemPK implements Serializable {
         this.order = order;
         this.product = product;
     }
+
 
     public Order getOrder() {
         return order;
