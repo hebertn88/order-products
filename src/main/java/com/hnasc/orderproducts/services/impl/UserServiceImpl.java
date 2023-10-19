@@ -7,7 +7,9 @@ import com.hnasc.orderproducts.models.User;
 import com.hnasc.orderproducts.models.enums.UserRole;
 import com.hnasc.orderproducts.models.repositories.UserRepository;
 import com.hnasc.orderproducts.services.UserService;
+import com.hnasc.orderproducts.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,7 @@ public class UserServiceImpl implements UserService {
         return repository.findByUsername(username);
     }
 
-    public User insert(User user) {
+    public User insert(User user) throws DataIntegrityViolationException {
         return repository.save(user);
     }
 
@@ -41,7 +43,7 @@ public class UserServiceImpl implements UserService {
                     repository.save(u);
                 },
                 () -> {
-                    throw new IllegalArgumentException("teste");
+                    throw new ResourceNotFoundException(id);
                 }
         );
     }
@@ -49,12 +51,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User udpate(Long id, UserUpdateDTO obj) {
         var optUser = repository.findById(id);
-        if (optUser.isPresent()) {
-            var user = optUser.get();
-            updateData(user, obj);
-            return repository.save(user);
-        }
-        return null;
+        var user = optUser.orElseThrow(() -> new ResourceNotFoundException(id));
+        updateData(user, obj);
+        return repository.save(user);
     }
 
     private void updateData(User userDB, UserUpdateDTO obj) {
@@ -72,7 +71,4 @@ public class UserServiceImpl implements UserService {
     public List<UserResponseDTO> toUserResponseDTO(List<User> users) {
         return users.stream().map(UserResponseDTO::new).toList();
     }
-
-
-
 }
