@@ -4,7 +4,7 @@ Projeto criado durante estudos do Bootcamp Santander 2023 FullStack Java+Angular
 
 Durante execução foi criada uma API REST com de Java utilizando SpringBoot e banco de dados Postgres.
 
-A API disponibilização autenticação via JWT através de Bearer Token.
+A API disponibiliza autenticação via JWT através de Bearer Token e endpoints para manipulação de usuários, produtos e pedidos.
 
 ## Endpoints
 
