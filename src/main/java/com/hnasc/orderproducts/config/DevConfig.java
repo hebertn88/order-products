@@ -9,13 +9,13 @@ import com.hnasc.orderproducts.models.repositories.OrderItemRepository;
 import com.hnasc.orderproducts.models.repositories.OrderRepository;
 import com.hnasc.orderproducts.models.repositories.ProductRepository;
 import com.hnasc.orderproducts.models.repositories.UserRepository;
-import com.hnasc.orderproducts.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 @Configuration
@@ -65,21 +65,21 @@ public class DevConfig implements CommandLineRunner {
         }
 
         // Order
+        var orders = (ArrayList<Order>) orderRepository.findAll();
+        if (orders.isEmpty()) {
+            var o = new Order((User) foundUser);
+            o = orderRepository.save(o);
 
-        var o = new Order((User) foundUser);
-        o = orderRepository.save(o);
+            p1 = productRepository.findByName(p1.getName()).get();
+            p2 = productRepository.findByName(p2.getName()).get();
+            p3 = productRepository.findByName(p3.getName()).get();
 
-        p1 = productRepository.findByName(p1.getName()).get();
-        p2 = productRepository.findByName(p2.getName()).get();
-        p3 = productRepository.findByName(p3.getName()).get();
+            var i1 = new OrderItem(o, p1, 2, p1.getPrice());
+            var i2 = new OrderItem(o, p2, 1, p2.getPrice());
+            var i3 = new OrderItem(o, p3, 3, 0.99);
 
-        var i1 = new OrderItem(o, p1, 2, p1.getPrice());
-        var i2 = new OrderItem(o, p2, 1, p2.getPrice());
-        var i3 = new OrderItem(o, p3, 3, 0.99);
-
-
-        orderItemRepository.saveAll(Arrays.asList(i1, i2, i3));
-
+            orderItemRepository.saveAll(Arrays.asList(i1, i2, i3));
+        }
     }
 
 

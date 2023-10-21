@@ -78,11 +78,11 @@ public class UserServiceImpl implements UserService {
 
 
     private void updateData(User userDB, UserUpdateDTO obj) {
-        UserRole role = UserRole.fromString(obj.role());
+        //UserRole role = UserRole.fromString(obj.role());
 
         userDB.setName(obj.name());
-        userDB.setPassword(obj.password());
-        userDB.setRole(role);
+        //userDB.setPassword(obj.password());
+        //userDB.setRole(role);
     }
 
     public UserResponseDTO toUserResponseDTO(User user) {

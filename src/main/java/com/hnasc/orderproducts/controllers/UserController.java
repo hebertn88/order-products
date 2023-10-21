@@ -35,7 +35,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody UserUpdateDTO obj) {
-        obj = new UserUpdateDTO(obj.name(), passwordEncoder.encode(obj.password()), obj.role());
+        //obj = new UserUpdateDTO(obj.name(), passwordEncoder.encode(obj.password()), obj.role());
         User user = userService.udpate(id, obj);
         return ResponseEntity.ok(new UserResponseDTO(user));
     }
