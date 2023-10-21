@@ -26,6 +26,11 @@ public class UserServiceImpl implements UserService {
         return (List<User>) repository.findAll();
     }
 
+    public User findById(Long id) {
+        var optUser = repository.findById(id);
+        return optUser.orElseThrow(() -> new ResourceNotFoundException(id));
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return repository.findByUsername(username);

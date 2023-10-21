@@ -12,12 +12,21 @@ import java.util.List;
 
 public interface UserService extends UserDetailsService {
     public List<User> findAll();
+
+    public User findById(Long id);
+
     public UserDetails loadUserByUsername(String username);
+
     public User insert(User user);
+
     public User udpate(Long id, UserUpdateDTO obj);
+
     public void setEnable(Long id, UserEnableDTO status);
+
     public void setRole(Long id, UserRoleDTO obj);
+
     public UserResponseDTO toUserResponseDTO(User user);
+
     public List<UserResponseDTO> toUserResponseDTO(List<User> users);
 
 }

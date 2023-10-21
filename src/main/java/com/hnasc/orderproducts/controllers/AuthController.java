@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping(value = "auth")
@@ -41,9 +44,12 @@ public class AuthController {
     @Transient
     @PostMapping(value = "register")
     public ResponseEntity<UserResponseDTO> register(@RequestBody AuthRegisterDTO data) {
-        User u = data.toUser();
-        u.setPassword(passwordEncoder.encode(u.getPassword()));
-        UserResponseDTO resp = new UserResponseDTO(userService.insert(u));
-        return ResponseEntity.ok(resp);
+        User user = data.toUser();
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        UserResponseDTO userDTO = new UserResponseDTO(userService.insert(user));
+
+        URI location = ServletUriComponentsBuilder.fromCurrentServletMapping().path("/users/{id}").buildAndExpand(user.getId()).toUri();
+        return ResponseEntity.created(location).body(userDTO);
+
     }
 }

@@ -27,6 +27,12 @@ public class UserController {
         return ResponseEntity.ok(userService.toUserResponseDTO(userService.findAll()));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id) {
+        var user = userService.findById(id);
+        return ResponseEntity.ok(userService.toUserResponseDTO(user));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody UserUpdateDTO obj) {
         obj = new UserUpdateDTO(obj.name(), passwordEncoder.encode(obj.password()), obj.role());
